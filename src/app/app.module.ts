@@ -18,6 +18,7 @@ import { UploadComponent } from './upload/upload.component';
 import { HttpClientModule } from '@angular/common/http';
 import {MatTableModule} from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatSelectModule} from '@angular/material/select';
 
 
 
@@ -42,7 +43,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatChipsModule,
         HttpClientModule,
         MatTableModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatSelectModule
     ],
     exports: [
 

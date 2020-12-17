@@ -24,10 +24,18 @@ export class DataService {
   }
 
   //CRUD
-  getComparisons(): Observable<any> {
-    return this.http.get(endpoint + 'comparisons').pipe(
+  getComparisons(group?:string): Observable<any> {
+    const url: string = (typeof group === 'undefined' || group === "" ) ?  "/comparisons": `/comparisons/${group}`
+    return this.http.get(endpoint + url).pipe(
       map(this.extractData));
   }
+
+  getGroups(): Observable<any> {
+    return this.http.get(endpoint + "/groups").pipe(
+      map(this.extractData));
+  }
+
+
 
   addComparison (comparison): Observable<any> {
     console.log(comparison);

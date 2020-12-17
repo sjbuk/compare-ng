@@ -3,6 +3,7 @@ import { DataService } from '../data.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-home',
@@ -11,7 +12,9 @@ import { MatSort } from '@angular/material/sort';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
     dataSource = new MatTableDataSource();
-    displayedColumns: string[] = ['group', 'left', 'right'];
+    displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
+    selectedGroup: string = ""
+    groupList: [];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -26,13 +29,23 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.getComparisons()
+        this.getGroupList()
     }
     
 
     getComparisons() {
-        this.rest.getComparisons().subscribe((data: []) => {
+        this.rest.getComparisons(this.selectedGroup).subscribe((data: []) => {
             this.dataSource.data = data;
-
         });
+    }
+
+    getGroupList(){
+        this.rest.getGroups().subscribe((data:[]) =>{
+            this.groupList = data;
+        })
+    }
+
+    onGroupChange (e: Event){
+        this.getComparisons()
     }
 }
