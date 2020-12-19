@@ -16,9 +16,14 @@ import { MatListModule } from '@angular/material/list'
 import { MatChipsModule } from '@angular/material/chips';
 import { UploadComponent } from './upload/upload.component';
 import { HttpClientModule } from '@angular/common/http';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
+import { FormCompareComponent } from './form-compare/form-compare.component';
+import { PageTestComponent } from './page-test/page-test.component';
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -27,7 +32,9 @@ import {MatSelectModule} from '@angular/material/select';
         AppComponent,
         HomeComponent,
         NavComponent,
-        UploadComponent
+        UploadComponent,
+        FormCompareComponent,
+        PageTestComponent
     ],
     imports: [
         BrowserModule,
@@ -44,12 +51,16 @@ import {MatSelectModule} from '@angular/material/select';
         HttpClientModule,
         MatTableModule,
         MatPaginatorModule,
-        MatSelectModule
+        MatSelectModule,
+        MatDialogModule,
+        MatInputModule,
+        FormsModule
     ],
     exports: [
 
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [FormCompareComponent]
 })
 export class AppModule { }

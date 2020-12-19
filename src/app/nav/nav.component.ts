@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
 })
 export class NavComponent {
 
-    varOpened: boolean = true;
+    varOpened = true;
 
 }

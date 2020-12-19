@@ -4,6 +4,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
+import { MatIcon} from '@angular/material/icon'
+import { ICompare } from '../interfaces';
 
 @Component({
     selector: 'app-home',
@@ -14,7 +16,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     dataSource = new MatTableDataSource();
     displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
     selectedGroup: string = ""
-    groupList: [];
+    groupList: String[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -33,14 +35,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
     
 
+    onIconClick(action: string, id: string){
+        console.log (`Action:${action}  id:${id}`);
+    }
     getComparisons() {
-        this.rest.getComparisons(this.selectedGroup).subscribe((data: []) => {
+        this.rest.getComparisons(this.selectedGroup).subscribe((data: ICompare[]) => {
             this.dataSource.data = data;
         });
     }
 
     getGroupList(){
-        this.rest.getGroups().subscribe((data:[]) =>{
+        this.rest.getGroups().subscribe((data: string[]) =>{
             this.groupList = data;
         })
     }
