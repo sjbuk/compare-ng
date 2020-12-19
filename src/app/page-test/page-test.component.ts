@@ -18,15 +18,12 @@ export class PageTestComponent implements OnInit {
 
     openDialog(): void {
         const dialogConfig = new MatDialogConfig();
-        const x: ICompare = { _id: '0000', group: 'BORG', left: 'LEFT', right: 'right' }
-        dialogConfig.data = { action: 'Update', compare: x };
-        dialogConfig.data.compare = x;
+        dialogConfig.data = { action: 'Update', compare: { _id: '0000', group: 'BORG', left: 'LEFT', right: 'right' } };
         const dialogRef = this.matDialog.open(FormCompareComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe(value => {
             console.log(value);
         });
-
     }
 
 

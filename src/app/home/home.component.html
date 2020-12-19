@@ -25,18 +25,13 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef> Actions</th>
             <td mat-cell *matCellDef="let element">
-                <a href="#">
-                    <mat-icon aria-hidden="false" color="secondary" aria-label="Edit" (click)="onIconClick('delete',element._id)">edit
-                    </mat-icon>
-                </a>
-                <a href="#">
-                    <mat-icon aria-hidden="false" color="warn" (click)="onIconClick('delete',element._id)"
-                        aria-label="Delete">delete</mat-icon>
-                </a>
-                <a href="#">
-                    <mat-icon aria-hidden="false" color="primary" (click)="onIconClick('go',element._id)"
-                        aria-label="Delete">play_arrow</mat-icon>
-                </a>
+                <mat-icon aria-hidden="false" color="secondary" aria-label="Edit"
+                    (click)="onIconClick('Edit',element)">edit
+                </mat-icon>
+                <mat-icon aria-hidden="false" color="warn" (click)="onIconClick('Delete',element)" aria-label="Delete">
+                    delete</mat-icon>
+                <mat-icon aria-hidden="false" color="primary" (click)="onIconClick('Run',element)" aria-label="Delete">
+                    play_arrow</mat-icon>
             </td>
         </ng-container>
 

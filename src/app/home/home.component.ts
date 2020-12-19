@@ -4,8 +4,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
-import { MatIcon} from '@angular/material/icon'
+import { MatIcon } from '@angular/material/icon';
 import { ICompare } from '../interfaces';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FormCompareComponent } from '../form-compare/form-compare.component';
 
 @Component({
     selector: 'app-home',
@@ -15,42 +17,52 @@ import { ICompare } from '../interfaces';
 export class HomeComponent implements OnInit, AfterViewInit {
     dataSource = new MatTableDataSource();
     displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
-    selectedGroup: string = ""
-    groupList: String[];
+    selectedGroup = '';
+    groupList: string[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(public rest: DataService) {
-   }
+    constructor(public rest: DataService, private matDialog: MatDialog) {
+    }
 
-    ngAfterViewInit(){
+    ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
 
-    ngOnInit() {
-        this.getComparisons()
-        this.getGroupList()
-    }
-    
 
-    onIconClick(action: string, id: string){
-        console.log (`Action:${action}  id:${id}`);
+    ngOnInit(): void {
+        this.getComparisons();
+        this.getGroupList();
     }
-    getComparisons() {
+
+
+    onIconClick(action: string, compare: ICompare): void {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.data = { action, compare };
+        console.log(dialogConfig.data);
+        const dialogRef = this.matDialog.open(FormCompareComponent, dialogConfig);
+
+        // Returned data on close
+        dialogRef.afterClosed().subscribe(value => {
+            console.log(value);
+        });
+    }
+
+    getComparisons(): void {
         this.rest.getComparisons(this.selectedGroup).subscribe((data: ICompare[]) => {
             this.dataSource.data = data;
         });
     }
 
-    getGroupList(){
-        this.rest.getGroups().subscribe((data: string[]) =>{
+    getGroupList(): void {
+        this.rest.getGroups().subscribe((data: string[]) => {
             this.groupList = data;
-        })
+        });
     }
 
-    onGroupChange (e: Event){
-        this.getComparisons()
+    onGroupChange(e: Event): void {
+        this.getComparisons();
     }
 }
