@@ -12,7 +12,7 @@ import { ICompare } from 'src/app/services/interfaces';
 })
 export class ImportWizardComponent implements OnInit {
     files: any[] = [];
-    CompareList: ICompare[];
+    CompareList: ICompare[] = [{ group: 'a', left: 'b', right: 'c'}];
     constructor() { }
 
     ngOnInit(): void {

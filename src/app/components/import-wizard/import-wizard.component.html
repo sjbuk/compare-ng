@@ -3,7 +3,7 @@
         <app-drag-n-drop (fileDrop)="onFileDrop($event)" [files]="files" ></app-drag-n-drop>
     </mat-step>
     <mat-step label="Record review">
-        <app-compare-list [CompareList]="CompareList" ></app-compare-list>
+        <app-compare-list [CompareList]="CompareList" [canRun]="false" [canUpdate]="false" [canAdd]="false" ></app-compare-list>
     </mat-step>
     <mat-step label="Upload">
         <p> step 3</p>
