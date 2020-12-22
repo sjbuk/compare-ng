@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { ICompare } from './interfaces';
 
 
 const endpoint = 'http://localhost:3010/api/';
@@ -26,7 +27,7 @@ export class DataService {
 
     // CRUD
     getComparisons(group?: string): Observable<any> {
-        const url: string = (typeof group === 'undefined' || group === '') ? '/comparisons' : `/comparisons/${group}`
+        const url: string = (typeof group === 'undefined' || group === '') ? '/comparisons' : `/comparisons/${group}`;
         return this.http.get(endpoint + url).pipe(
             map(this.extractData));
     }
@@ -38,13 +39,26 @@ export class DataService {
 
 
 
-    addComparison(comparison): Observable<any> {
+    addComparison(comparison: ICompare): void {
+        const url = endpoint + 'comparison';
         console.log(comparison);
-        return this.http.post<any>(endpoint + 'comparison', JSON.stringify(comparison), httpOptions).pipe(
-            tap((comparison) => console.log(`added comparison w/ id=${comparison.id}`)),
-            catchError(this.handleError<any>('addComparison'))
-        );
+        this.http.post<any>(url, JSON.stringify(comparison), httpOptions).subscribe( (res) => {
+        });
     }
+
+    updateComparison(comparison: ICompare): void {
+        const url = endpoint + `comparison/${comparison._id}`;
+        const reqData: string = JSON.stringify(comparison);
+        this.http.put<any>(url, reqData , httpOptions).subscribe( (res) => {
+        });
+    }
+    deleteComparison(id: string): void {
+        const url = endpoint + `comparison/${id}`;
+        this.http.delete<any>(url, httpOptions ).subscribe( (res) => {
+        });
+    }
+
+
     // CRUD
 
 

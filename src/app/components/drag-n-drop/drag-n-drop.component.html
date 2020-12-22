@@ -1,0 +1,25 @@
+<div class="container" appDnd (fileDropped)="onFileDropped($event)">
+    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+    <mat-icon class="iconlarge">cloud_upload</mat-icon>
+
+    <h3>Drag and drop file here</h3>
+    <h3>or</h3>
+    <label for="fileDropRef">Browse for file</label>
+</div>
+<div class="files-list">
+    <div class="single-file" *ngFor="let file of files; let i = index">
+        <div class="" style="width: 50px">
+            <mat-icon>description</mat-icon>
+        </div>
+        <div class="info">
+            <h4 class="name">
+                {{ file?.name }} {{file.validated != true ? "- File not valid for import." : ""}}
+            </h4>
+            <div class="size">
+                {{ formatBytes(file?.size) }}
+            </div>
+            
+        </div>
+        <mat-icon (click)="deleteFile(i)">delete</mat-icon>
+    </div>
+</div>

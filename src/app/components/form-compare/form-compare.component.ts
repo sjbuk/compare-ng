@@ -1,6 +1,8 @@
 // https://www.techiediaries.com/angular-material-dialogs/
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DataService } from '../../services/data.service';
+import { IFormData } from '../../services/interfaces';
 
 
 @Component({
@@ -12,12 +14,31 @@ export class FormCompareComponent implements OnInit {
     other = 'HELLO';
     constructor(
         public dialogRef: MatDialogRef<FormCompareComponent>,  // Dialog Reference
-        @Inject(MAT_DIALOG_DATA) public data: any) { } // Inject Data
+        @Inject(MAT_DIALOG_DATA) public data: IFormData,
+        public rest: DataService) { } // Inject Data
 
     ngOnInit(): void {
     }
 
     formAction(): void {
+        switch (this.data.action) {
+            case 'Delete':
+                this.rest.deleteComparison(this.data.data._id);
+                break;
+
+            case 'Update':
+                this.rest.updateComparison(this.data.data);
+                break;
+            case 'Run':
+
+                break;
+
+            case 'New':
+                this.rest.addComparison(this.data.data);
+                break;
+            default:
+                break;
+        }
         console.log(this.data);
         this.dialogRef.close(this.data);
     }
