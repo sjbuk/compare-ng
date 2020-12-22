@@ -17,10 +17,12 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     get CompareList(): ICompare[] { return this._compareList; }
     set CompareList(CompareList: ICompare[]) {
         this._compareList = CompareList;
+
+        // Check _compareList has data and add it to tabel datasource
         if (this._compareList) {
             this.dataSource.data = this._compareList;
-            console.log(this.dataSource.data);
         }
+        this.groupList = [... new Set(this._compareList.map(value => value.group))];
     }
     @Input() canUpdate = true;
     @Input() canAdd = true;
