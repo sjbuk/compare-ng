@@ -14,5 +14,5 @@ export enum FormActions {
 
 export interface IFormData{
     action: FormActions;
-    data: any;
+    data?: any;
 }

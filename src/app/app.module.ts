@@ -33,6 +33,7 @@ import { CompareListComponent } from './components/compare-list/compare-list.com
 
 
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -66,7 +67,7 @@ import { CompareListComponent } from './components/compare-list/compare-list.com
         MatDialogModule,
         MatInputModule,
         FormsModule,
-        MatStepperModule
+        MatStepperModule,
     ],
     exports: [
 

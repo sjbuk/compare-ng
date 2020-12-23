@@ -1,8 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Input, Output } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { FormActions, ICompare } from '../../services/interfaces';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FormActions, ICompare, IFormData } from '../../services/interfaces';
+import { FormCompareComponent } from '../../components/form-compare/form-compare.component';
+import { EventEmitter } from '@angular/core';
+
 
 
 @Component({
@@ -22,6 +26,7 @@ export class CompareListComponent implements OnInit, AfterViewInit {
         if (this._compareList) {
             this.dataSource.data = this._compareList;
         }
+        // Get unique values of group for GroupList
         this.groupList = [... new Set(this._compareList.map(value => value.group))];
     }
     @Input() canUpdate = true;
@@ -39,8 +44,9 @@ export class CompareListComponent implements OnInit, AfterViewInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    @Output () newActionEvent = new EventEmitter<IFormData>();
 
-    constructor() {
+    constructor( private matDialog: MatDialog) {
     }
 
 
@@ -54,8 +60,30 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     }
 
     onIconClick(action: FormActions, compare?: ICompare): void {
-    }
+        const dialogConfig = new MatDialogConfig();
 
+        if (compare === undefined){
+            compare = {group: '', left: '', right: ''};
+        }
+        dialogConfig.data = ({ action, data: compare } as IFormData);
+        const dialogRef = this.matDialog.open(FormCompareComponent, dialogConfig);
+
+        // Returned data on close
+        dialogRef.afterClosed().subscribe(value => {
+            this.newActionEvent.emit(value);
+        });
+
+    }
+    onGroupChange(e): void{
+        if (e.value === ''){
+            this.dataSource.data = this._compareList;
+        }else
+        {
+            this.dataSource.data = this._compareList.filter((element) => element.group == e.value);
+        }
+        console.log(e);
+
+    }
     getDisplayColumns(): string[] {
         const showActionCol = this.canDelete || this.canRun || this.canUpdate;
         return this._displayedColumns.filter(col => col !== 'actions' || showActionCol);

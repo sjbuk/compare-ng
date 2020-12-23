@@ -8,13 +8,14 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormCompareComponent } from '../../components/form-compare/form-compare.component';
 
 
+
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterViewInit {
-    dataSource = new MatTableDataSource();
+export class HomeComponent implements OnInit {
+    dataSource: ICompare[] = [];
     displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
     selectedGroup = '';
     groupList: string[];
@@ -23,14 +24,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(public rest: DataService, private matDialog: MatDialog) {
+    constructor(public rest: DataService) {
     }
 
 
-    ngAfterViewInit(): void {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
 
 
     ngOnInit(): void {
@@ -39,30 +36,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
 
 
-    onIconClick(action: FormActions, compare?: ICompare): void {
-        const dialogConfig = new MatDialogConfig();
-
-        if (compare === undefined){
-            compare = {group: '', left: '', right: ''};
-        }
-        dialogConfig.data = ({ action, data: compare } as IFormData);
-        console.log(dialogConfig.data);
-        const dialogRef = this.matDialog.open(FormCompareComponent, dialogConfig);
-
-        // Returned data on close
-        dialogRef.afterClosed().subscribe(value => {
-            if (value.action === 'Delete' || value.action === 'New') {
+    onIconClick(e: IFormData): void {
+        switch (e.action) {
+            case 'New':
+                this.rest.addComparison(e.data);
                 this.getComparisons();
-                this.getGroupList();
-            }
-        });
-
+                break;
+            case 'Update':
+                this.rest.updateComparison(e.data);
+                break;
+            case 'Delete':
+                this.rest.deleteComparison(e.data._id);
+                this.getComparisons();
+                break;
+            case 'Run':
+                // TODO: Impliment Run
+                break;
+            default:
+                break;
+        }
     }
 
 
     getComparisons(): void {
         this.rest.getComparisons(this.selectedGroup).subscribe((data: ICompare[]) => {
-            this.dataSource.data = data;
+            this.dataSource = data;
         });
     }
 

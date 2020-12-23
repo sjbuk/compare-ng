@@ -1,7 +1,6 @@
-import { createElementCssSelector } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { Event } from '@angular/router';
 import { csvToJson, getFileContents } from 'src/app/helper/utulity';
+import { DataService } from 'src/app/services/data.service';
 import { ICompare } from 'src/app/services/interfaces';
 
 
@@ -11,25 +10,47 @@ import { ICompare } from 'src/app/services/interfaces';
     styleUrls: ['./import-wizard.component.scss']
 })
 export class ImportWizardComponent implements OnInit {
-    files: any[] = [];
-    CompareList: ICompare[] = [{ group: 'a', left: 'b', right: 'c'}];
-    constructor() { }
+    files: File[] = [];
+    CompareList: ICompare[] = [];
+    constructor(public rest: DataService) { }
 
     ngOnInit(): void {
     }
-    async onFileDrop(e: Event): Promise<void> {
+    onFileDrop(e: any): void {
         console.log('Drop Event');
-        this.files = this.files.map(async (value: any) => {
+        this.CompareList = [];
+        this.files.map(async (value: any) => {
             value.validated = this.validateFile(value);
             if (value.validated) {
                 const fileContents = await getFileContents(value);
-                this.CompareList = csvToJson(fileContents);
-                console.log(this.CompareList);
+                this.CompareList = this.CompareList.concat(csvToJson(fileContents));
             }
         });
     }
 
+    handleActionEvent(e: any): void {
+        console.log(e);
+        if (e.action === 'Delete') {
+            const indexToRemove = this.CompareList.findIndex(((value, index) => value._id === e.data._id));
+            console.log(`Index: ${indexToRemove}`);
+            console.log(this.CompareList);
+
+            if (indexToRemove !== -1) {
+                this.CompareList.splice(indexToRemove, 1);
+                this.CompareList = [...this.CompareList];
+            }
+            console.log(this.CompareList);
+
+        }
+    }
     validateFile(file: any): boolean {
         return RegExp('\.(csv)$').test(file.name);
+    }
+    uploadRecords(): void{
+        this.CompareList.map((value) => {
+            const rec: ICompare = {group: value.group, left: value.left, right: value.right};
+            this.rest.addComparison(rec);
+        });
+
     }
 }

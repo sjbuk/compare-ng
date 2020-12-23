@@ -1,6 +1,7 @@
-import Pappa from 'papaparse';
-import { promise } from 'protractor';
 import { ICompare } from '../services/interfaces';
+import {v4 as uuid } from 'uuid';
+import * as Papa from 'papaparse';
+
 
 
 export function csvToJson(text: string): ICompare[] {
@@ -9,11 +10,13 @@ export function csvToJson(text: string): ICompare[] {
         skipEmptyLines: true
     };
     console.log (text);
-    let data: Array<any> = Pappa.parse(text, csvConfig).data;
+    let data: Array<any> = Papa.parse(text, csvConfig).data;
     // Map columns from csv to what mongo requires
     data = data.map((el: any) => {
+        const id: string = uuid();
         return (
             {
+                _id : id,
                 group: Object.values(el)[0] as string,
                 left: Object.values(el)[1] as string,
                 right: Object.values(el)[2] as string

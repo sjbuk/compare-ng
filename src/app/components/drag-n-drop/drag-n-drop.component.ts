@@ -58,7 +58,7 @@ export class DragNDropComponent implements OnInit {
         for (const item of files) {
             this.files.push(item);
         }
-        this.fileDrop.emit(files);
+        this.fileDrop.emit(this.files);
     }
 
     formatBytes(bytes, decimals) {
