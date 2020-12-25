@@ -17,7 +17,6 @@ export class ImportWizardComponent implements OnInit {
     ngOnInit(): void {
     }
     onFileDrop(e: any): void {
-        console.log('Drop Event');
         this.CompareList = [];
         this.files.map(async (value: any) => {
             value.validated = this.validateFile(value);
@@ -29,27 +28,23 @@ export class ImportWizardComponent implements OnInit {
     }
 
     handleActionEvent(e: any): void {
-        console.log(e);
         if (e.action === 'Delete') {
             const indexToRemove = this.CompareList.findIndex(((value, index) => value._id === e.data._id));
-            console.log(`Index: ${indexToRemove}`);
-            console.log(this.CompareList);
 
             if (indexToRemove !== -1) {
                 this.CompareList.splice(indexToRemove, 1);
                 this.CompareList = [...this.CompareList];
             }
-            console.log(this.CompareList);
-
         }
     }
+    
     validateFile(file: any): boolean {
         return RegExp('\.(csv)$').test(file.name);
     }
     uploadRecords(): void{
         this.CompareList.map((value) => {
             const rec: ICompare = {group: value.group, left: value.left, right: value.right};
-            this.rest.addComparison(rec);
+            this.rest.addComparison(rec).subscribe();
         });
 
     }

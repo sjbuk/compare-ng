@@ -30,6 +30,9 @@ import { ProgressComponent } from './components/progress/progress.component';
 import { ImportWizardComponent } from './components/import-wizard/import-wizard.component';
 import {MatStepperModule} from '@angular/material/stepper';
 import { CompareListComponent } from './components/compare-list/compare-list.component';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 
@@ -68,6 +71,9 @@ import { CompareListComponent } from './components/compare-list/compare-list.com
         MatInputModule,
         FormsModule,
         MatStepperModule,
+        MatBadgeModule,
+        MatDividerModule,
+        MatExpansionModule
     ],
     exports: [
 

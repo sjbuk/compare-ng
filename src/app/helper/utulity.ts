@@ -9,7 +9,6 @@ export function csvToJson(text: string): ICompare[] {
         header: true,
         skipEmptyLines: true
     };
-    console.log (text);
     let data: Array<any> = Papa.parse(text, csvConfig).data;
     // Map columns from csv to what mongo requires
     data = data.map((el: any) => {

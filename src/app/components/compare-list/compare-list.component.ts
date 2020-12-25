@@ -6,17 +6,25 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormActions, ICompare, IFormData } from '../../services/interfaces';
 import { FormCompareComponent } from '../../components/form-compare/form-compare.component';
 import { EventEmitter } from '@angular/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 
 
 @Component({
     selector: 'app-compare-list',
     templateUrl: './compare-list.component.html',
-    styleUrls: ['./compare-list.component.scss']
+    styleUrls: ['./compare-list.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({ height: '0px', minHeight: '0' })),
+            state('expanded', style({ height: '*' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
 })
 export class CompareListComponent implements OnInit, AfterViewInit {
     private _compareList: ICompare[] = [];
-    private _displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
+    private _displayedColumns: string[] = ['group', 'left', 'right', 'status', 'actions'];
     @Input()
     get CompareList(): ICompare[] { return this._compareList; }
     set CompareList(CompareList: ICompare[]) {
@@ -34,6 +42,7 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     @Input() canRun = true;
     @Input() canDelete = true;
     @Input() canGrouBy = true;
+    @Input() showStatusCol = true;
 
 
     dataSource = new MatTableDataSource();
@@ -41,12 +50,13 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     selectedGroup = '';
     groupList: string[];
     formActions: FormActions;
+    expandedElement: ICompare | null;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    @Output () newActionEvent = new EventEmitter<IFormData>();
+    @Output() newActionEvent = new EventEmitter<IFormData>();
 
-    constructor( private matDialog: MatDialog) {
+    constructor(private matDialog: MatDialog) {
     }
 
 
@@ -62,8 +72,8 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     onIconClick(action: FormActions, compare?: ICompare): void {
         const dialogConfig = new MatDialogConfig();
 
-        if (compare === undefined){
-            compare = {group: '', left: '', right: ''};
+        if (compare === undefined) {
+            compare = { group: '', left: '', right: '' };
         }
         dialogConfig.data = ({ action, data: compare } as IFormData);
         const dialogRef = this.matDialog.open(FormCompareComponent, dialogConfig);
@@ -74,19 +84,18 @@ export class CompareListComponent implements OnInit, AfterViewInit {
         });
 
     }
-    onGroupChange(e): void{
-        if (e.value === ''){
+    onGroupChange(e): void {
+        if (e.value === '') {
             this.dataSource.data = this._compareList;
-        }else
-        {
-            this.dataSource.data = this._compareList.filter((element) => element.group == e.value);
+        } else {
+            this.dataSource.data = this._compareList.filter((element) => element.group === e.value);
         }
-        console.log(e);
-
     }
+
     getDisplayColumns(): string[] {
         const showActionCol = this.canDelete || this.canRun || this.canUpdate;
-        return this._displayedColumns.filter(col => col !== 'actions' || showActionCol);
+        return this._displayedColumns.filter(col => ((col === 'actions' && !showActionCol)
+            || (col === 'status' && !this.showStatusCol)) ? false : true);
     }
 
 }

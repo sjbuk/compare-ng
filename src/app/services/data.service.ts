@@ -26,35 +26,46 @@ export class DataService {
     }
 
     // CRUD
-    getComparisons(group?: string): Observable<any> {
+    getComparisons(group?: string): Observable<ICompare[]> {
         const url: string = (typeof group === 'undefined' || group === '') ? '/comparisons' : `/comparisons/${group}`;
-        return this.http.get(endpoint + url).pipe(
-            map(this.extractData));
+        return this.http.get<ICompare[]>(endpoint + url)
+        .pipe(
+            catchError(this.handleError<ICompare[]>('getComparisons', []))
+        );
     }
 
-    getGroups(): Observable<any> {
-        return this.http.get(endpoint + '/groups').pipe(
-            map(this.extractData));
+    getGroups(): Observable<string[]> {
+        return this.http.get<string[]>(endpoint + '/groups')
+        .pipe(
+            catchError(this.handleError<string[]>('getGroups', []))
+            );
     }
 
 
 
-    addComparison(comparison: ICompare): void {
+    addComparison(comparison: ICompare): Observable<string> {
         const url = endpoint + 'comparison';
-        console.log(comparison);
-        this.http.post<any>(url, JSON.stringify(comparison), httpOptions).subscribe( (res) => {
-        });
+        return this.http.post<any>(url, JSON.stringify(comparison), httpOptions).pipe(
+            catchError(this.handleError<string>('addComparison'))
+        );
     }
 
-    updateComparison(comparison: ICompare): void {
+    updateComparison(comparison: ICompare): Observable<ICompare> {
         const url = endpoint + `comparison/${comparison._id}`;
-        const reqData: string = JSON.stringify(comparison);
-        this.http.put<any>(url, reqData , httpOptions).subscribe( (res) => {
-        });
+        return this.http.put<any>(url, comparison , httpOptions).pipe(
+            catchError(this.handleError<ICompare>('updateComparison'))
+        );
     }
-    deleteComparison(id: string): void {
+    deleteComparison(id: string): Observable<string> {
         const url = endpoint + `comparison/${id}`;
-        this.http.delete<any>(url, httpOptions ).subscribe( (res) => {
+        return this.http.delete<string>(url, httpOptions ).pipe(
+            catchError(this.handleError<string>('deleteComparison'))
+        );
+    }
+
+    runCompare(id: string): void{
+        const url = endpoint + `compare/${id}`;
+        this.http.get<any>(url, httpOptions ).subscribe( (res) => {
         });
     }
 
