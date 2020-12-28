@@ -33,6 +33,8 @@ import { CompareListComponent } from './components/compare-list/compare-list.com
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { ResultGridComponent } from './components/result-grid/result-grid.component';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 
@@ -49,7 +51,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         DndDirective,
         ProgressComponent,
         ImportWizardComponent,
-        CompareListComponent
+        CompareListComponent,
+        ResultGridComponent
     ],
     imports: [
         BrowserModule,
@@ -73,7 +76,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
         MatStepperModule,
         MatBadgeModule,
         MatDividerModule,
-        MatExpansionModule
+        MatExpansionModule,
+        MatGridListModule
     ],
     exports: [
 

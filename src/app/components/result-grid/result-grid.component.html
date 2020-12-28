@@ -1,0 +1,25 @@
+<mat-grid-list cols="12" rowHeight="50px" gutterSize="2px">
+    <mat-grid-tile colspan="2">
+        Date: {{result.timestamp| date: "dd-MM-yyy HH:mm"}}
+    </mat-grid-tile>
+    <mat-grid-tile colspan="5">
+        Structual changes - {{result.addedChangeCount}} added, {{result.deletedChangeCount}} removed.
+    </mat-grid-tile>
+    <mat-grid-tile colspan="5">
+        Data changes - {{result.valueChangeCount}} values, {{result.arrayChangeCount}} array.
+    </mat-grid-tile>
+    <div *ngFor="let diff of result.differences">
+        <mat-grid-tile colspan="1">
+            Kind - {{diff.kind}}
+        </mat-grid-tile>
+        <mat-grid-tile colspan="3">
+            <div>Path - {{diff.path}}</div>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4">
+            {{diff.lhs}}
+        </mat-grid-tile>
+        <mat-grid-tile colspan="4">
+            {{diff.rhs}}
+        </mat-grid-tile>
+    </div>
+</mat-grid-list>

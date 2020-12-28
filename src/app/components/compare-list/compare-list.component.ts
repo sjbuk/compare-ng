@@ -10,6 +10,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 
 
 
+
 @Component({
     selector: 'app-compare-list',
     templateUrl: './compare-list.component.html',
