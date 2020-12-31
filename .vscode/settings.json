@@ -2,5 +2,6 @@
     "files.exclude": {
         "**/*.spec.ts": true,
         "**/polyfills.ts": true
-    }
+    },
+    "editor.codeActionsOnSave": {"source.fixAll": true}
 }

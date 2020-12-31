@@ -6,7 +6,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormActions, ICompare, IFormData } from '../../services/interfaces';
 import { FormCompareComponent } from '../../components/form-compare/form-compare.component';
 import { EventEmitter } from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Observable, of, pipe } from 'rxjs';
+import { DataService } from 'src/app/services/data.service';
 
 
 
@@ -23,21 +25,25 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         ]),
     ],
 })
-export class CompareListComponent implements OnInit, AfterViewInit {
+export class CompareListComponent {
     private _compareList: ICompare[] = [];
     private _displayedColumns: string[] = ['group', 'left', 'right', 'status', 'actions'];
-    @Input()
-    get CompareList(): ICompare[] { return this._compareList; }
-    set CompareList(CompareList: ICompare[]) {
-        this._compareList = CompareList;
+    // @Input()
+    // get CompareList(): ICompare[] { return this._compareList; }
+    // set CompareList(CompareList: ICompare[]) {
+    //     this._compareList = CompareList;
 
-        // Check _compareList has data and add it to tabel datasource
-        if (this._compareList) {
-            this.dataSource.data = this._compareList;
-        }
-        // Get unique values of group for GroupList
-        this.groupList = [... new Set(this._compareList.map(value => value.group))];
-    }
+    //     // Check _compareList has data and add it to tabel datasource
+    //     if (this._compareList) {
+    //         this.dataSource.data = this._compareList;
+    //         // Get unique values of group for GroupList
+    //         this.groupList = [... new Set(this._compareList.map(value => value.group))];
+    //         this.groupList = [];
+
+    //     }
+    // }
+    @Input() CompareList$: Observable<ICompare[]>;
+    @Input() Groups$: Observable<string[]>;
     @Input() canUpdate = true;
     @Input() canAdd = true;
     @Input() canRun = true;
@@ -46,10 +52,9 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     @Input() showStatusCol = true;
 
 
-    dataSource = new MatTableDataSource();
+    // dataSource = new MatTableDataSource();
 
     selectedGroup = '';
-    groupList: string[];
     formActions: FormActions;
     expandedElement: ICompare | null;
 
@@ -57,18 +62,20 @@ export class CompareListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
     @Output() newActionEvent = new EventEmitter<IFormData>();
 
-    constructor(private matDialog: MatDialog) {
+    constructor(private matDialog: MatDialog, private rest: DataService) {
     }
 
 
-    ngOnInit(): void {
+    // ngOnInit(): void {
 
-    }
+    // }
 
-    ngAfterViewInit(): void {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
+    // ngAfterViewInit(): void {
+    //     this.dataSource.paginator = this.paginator;
+    //     this.dataSource.sort = this.sort;
+
+    // }
+
 
     onIconClick(action: FormActions, compare?: ICompare): void {
         const dialogConfig = new MatDialogConfig();
@@ -85,12 +92,10 @@ export class CompareListComponent implements OnInit, AfterViewInit {
         });
 
     }
+    
     onGroupChange(e): void {
-        if (e.value === '') {
-            this.dataSource.data = this._compareList;
-        } else {
-            this.dataSource.data = this._compareList.filter((element) => element.group === e.value);
-        }
+        //TODO : This should really be passed in so this component is not bound to the data service
+        this.rest.selectedGroupChange(e.value);
     }
 
     getDisplayColumns(): string[] {

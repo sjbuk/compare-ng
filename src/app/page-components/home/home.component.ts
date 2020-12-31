@@ -3,6 +3,7 @@ import { DataService } from '../../services/data.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FormActions, ICompare, IFormData } from '../../services/interfaces';
+import { Observable } from 'rxjs';
 
 
 
@@ -11,12 +12,14 @@ import { FormActions, ICompare, IFormData } from '../../services/interfaces';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
-    dataSource: ICompare[] = [];
+export class HomeComponent {
     displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
     selectedGroup = '';
     groupList: string[];
     formActions: FormActions;
+
+    dataSource$ = this.rest.comparisons$;
+    groups$ = this.rest.groups$;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -24,31 +27,21 @@ export class HomeComponent implements OnInit {
     constructor(public rest: DataService) {
     }
 
-
-
-
-    ngOnInit(): void {
-        this.getComparisons();
-
-    }
-
-
     onIconClick(e: IFormData): void {
         switch (e.action) {
             case 'New':
                 this.rest.addComparison(e.data)
-                    .subscribe(_ => this.getComparisons());
+                    .subscribe();
                 break;
             case 'Update':
                 this.rest.updateComparison(e.data).subscribe();
                 break;
             case 'Delete':
                 this.rest.deleteComparison(e.data._id)
-                    .subscribe(_ => this.getComparisons());
+                    .subscribe();
                 break;
             case 'Run':
                 this.rest.runCompare(e.data._id);
-                this.getComparisons();
                 break;
             default:
                 break;
@@ -56,9 +49,4 @@ export class HomeComponent implements OnInit {
     }
 
 
-    getComparisons(): void {
-        this.rest.getComparisons(this.selectedGroup).subscribe((data: ICompare[]) => {
-            this.dataSource = data;
-        });
-    }
 }

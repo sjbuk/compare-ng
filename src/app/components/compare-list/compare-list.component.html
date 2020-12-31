@@ -1,5 +1,5 @@
 <div>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+    <table mat-table [dataSource]="CompareList$ | async" class="mat-elevation-z8" multiTemplateDataRows>
         <ng-container matColumnDef="group">
             <div *ngIf="canGrouBy; then thenBlock else elseBlock"></div>
             <ng-template #thenBlock>
@@ -7,7 +7,7 @@
                     <mat-form-field appearance="fill">
                         <mat-select [(value)]="selectedGroup" (selectionChange)="onGroupChange($event)">
                             <mat-option value="">All Groups</mat-option>
-                            <mat-option *ngFor="let group of groupList" value="{{group}}">{{group}}</mat-option>
+                            <mat-option *ngFor="let group of Groups$ | async" value="{{group}}">{{group}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-icon *ngIf="canAdd" class="action-icon" (click)="onIconClick('New')">add</mat-icon>
@@ -77,5 +77,5 @@
         </tr>
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[50,5, 10, 25, 100]"></mat-paginator>
+    
 </div>

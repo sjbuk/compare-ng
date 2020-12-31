@@ -1,5 +1,4 @@
 <div>
-    <app-compare-list [CompareList]="dataSource"  (newActionEvent)="onIconClick($event)">
+    <app-compare-list [CompareList$]="dataSource$" [Groups$]="groups$" (newActionEvent)="onIconClick($event)">
     </app-compare-list>
-
 </div>

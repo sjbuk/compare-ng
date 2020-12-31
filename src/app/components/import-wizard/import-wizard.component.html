@@ -3,12 +3,12 @@
         <app-drag-n-drop (fileDrop)="onFileDrop($event)" [files]="files"></app-drag-n-drop>
     </mat-step>
     <mat-step label="Record review">
-        <app-compare-list [CompareList]="CompareList" [canRun]="false" [canUpdate]="false" [canAdd]="false" (newActionEvent)="handleActionEvent($event)">
+        <app-compare-list [CompareList$]="CompareList" [canRun]="false" [canUpdate]="false" [canAdd]="false" (newActionEvent)="handleActionEvent($event)">
         </app-compare-list>
     </mat-step>
     <mat-step label="Upload">
         <button mat-raised-button (click)="uploadRecords()" color="accent">Upload</button>
-        <app-compare-list [CompareList]="CompareList" [canRun]="false" [canUpdate]="false" [canAdd]="false" (newActionEvent)="handleActionEvent($event)">
+        <app-compare-list [CompareList$]="CompareList" [canRun]="false" [canUpdate]="false" [canAdd]="false" (newActionEvent)="handleActionEvent($event)">
         </app-compare-list>
     </mat-step>
 
