@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject, of } from 'rxjs';
 import { csvToJson, getFileContents } from 'src/app/helper/utulity';
 import { DataService } from 'src/app/services/data.service';
 import { ICompare } from 'src/app/services/interfaces';
@@ -12,6 +13,7 @@ import { ICompare } from 'src/app/services/interfaces';
 export class ImportWizardComponent implements OnInit {
     files: File[] = [];
     CompareList: ICompare[] = [];
+    CompareList$ = new BehaviorSubject(this.CompareList);
     constructor(public rest: DataService) { }
 
     ngOnInit(): void {
@@ -23,6 +25,7 @@ export class ImportWizardComponent implements OnInit {
             if (value.validated) {
                 const fileContents = await getFileContents(value);
                 this.CompareList = this.CompareList.concat(csvToJson(fileContents));
+                this.CompareList$.next(this.CompareList);
             }
         });
     }
@@ -37,7 +40,7 @@ export class ImportWizardComponent implements OnInit {
             }
         }
     }
-    
+
     validateFile(file: any): boolean {
         return RegExp('\.(csv)$').test(file.name);
     }

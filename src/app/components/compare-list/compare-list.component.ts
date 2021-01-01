@@ -92,9 +92,9 @@ export class CompareListComponent {
         });
 
     }
-    
+
     onGroupChange(e): void {
-        //TODO : This should really be passed in so this component is not bound to the data service
+        // TODO : This should really be passed in so this component is not bound to the data service
         this.rest.selectedGroupChange(e.value);
     }
 

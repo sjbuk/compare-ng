@@ -8,6 +8,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     justify-content: flex-start;
     overflow: hidden;
     text-overflow: ellipsis;
-
-
+    margin-left: .5em;
+ }
+ .grid-header{
+     font-weight: 500;
  }

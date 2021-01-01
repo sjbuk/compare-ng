@@ -59,11 +59,11 @@
         </ng-container>
 
         
-        <ng-container matColumnDef="expandedDetail">
+        <ng-container matColumnDef="expandedDetail" >
             <td mat-cell *matCellDef="let element" [attr.colspan]="getDisplayColumns().length">
               <div class="element-detail"
                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                  <app-result-grid class="resultGrid" [result]="element?.result"></app-result-grid>
+                  <app-result-grid *ngIf="element?.result" class="resultGrid" [result]="element?.result"></app-result-grid>
                 </div>
             </td>
         </ng-container>

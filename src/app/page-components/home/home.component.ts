@@ -12,10 +12,8 @@ import { Observable } from 'rxjs';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
     displayedColumns: string[] = ['group', 'left', 'right', 'actions'];
-    selectedGroup = '';
-    groupList: string[];
     formActions: FormActions;
 
     dataSource$ = this.rest.comparisons$;
@@ -25,6 +23,11 @@ export class HomeComponent {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(public rest: DataService) {
+    }
+
+    ngOnInit(): void{
+        this.rest.refreshComparisons();
+        this.rest.selectedGroupChange('');
     }
 
     onIconClick(e: IFormData): void {

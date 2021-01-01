@@ -48,3 +48,13 @@ table {
   .resultGrid{
       width: 100%;
   }
+
+  .mat-column-group, .mat-column-actions, .mat-column-status {
+      width: 12%;
+      min-width: 75px;
+
+  }
+
+  .mat-column-left, .mat-column-right {
+    width: 33%;
+}

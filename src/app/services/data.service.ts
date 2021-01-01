@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
+import { map, catchError, tap, shareReplay } from 'rxjs/operators';
 import { ICompare } from './interfaces';
 
 
@@ -17,32 +17,26 @@ const httpOptions = {
     providedIn: 'root'
 })
 export class DataService {
-
-    constructor(private http: HttpClient) { }
     private comparisonUrl = endpoint + '/comparisons';
-
     private _groupSubject = new BehaviorSubject<string>('');
 
+    HttpComparisons$ = new Subject<ICompare[]>();
 
-    HttpComparisons$ = this.http.get<ICompare[]>(this.comparisonUrl)
-        .pipe(
-            catchError(this.handleError<ICompare[]>('getComparisons', []))
-        );
-
-    // CRUD
     groups$ = this.http.get<string[]>(endpoint + '/groups')
         .pipe(
             catchError(this.handleError<string[]>('getGroups', []))
         );
 
-
     //  Combine group selection with comparison to filter by group
     comparisons$ = combineLatest([this.HttpComparisons$, this._groupSubject])
         .pipe(
             map(([comparisons, group]) =>
-                comparisons.filter(e => e.group === group || group === '')
+                comparisons.filter(e => e.group === group || group === ''),
+                shareReplay(1)
             )
         );
+
+    constructor(private http: HttpClient) {}
 
 
 
@@ -52,16 +46,27 @@ export class DataService {
         return body || {};
     }
 
+    refreshComparisons(): void {
+        this.http.get<ICompare[]>(this.comparisonUrl)
+            .pipe(
+                catchError(this.handleError<ICompare[]>('getComparisons', []))
+            ).subscribe((data: ICompare[]) => {
+                this.HttpComparisons$.next(data);
+            });
+
+    }
     // Emit change of Group
-    selectedGroupChange(selectedGroup: string): void{
+    selectedGroupChange(selectedGroup: string): void {
         this._groupSubject.next(selectedGroup);
     }
 
     addComparison(comparison: ICompare): Observable<string> {
         const url = endpoint + 'comparison';
-        return this.http.post<any>(url, JSON.stringify(comparison), httpOptions).pipe(
-            catchError(this.handleError<string>('addComparison'))
-        );
+        return this.http.post<any>(url, JSON.stringify(comparison), httpOptions)
+            .pipe(
+                catchError(this.handleError<string>('addComparison')),
+                tap(() => this.refreshComparisons())
+            );
     }
 
     updateComparison(comparison: ICompare): Observable<ICompare> {
@@ -72,9 +77,11 @@ export class DataService {
     }
     deleteComparison(id: string): Observable<string> {
         const url = endpoint + `comparison/${id}`;
-        return this.http.delete<string>(url, httpOptions).pipe(
-            catchError(this.handleError<string>('deleteComparison'))
-        );
+        return this.http.delete<string>(url, httpOptions)
+            .pipe(
+                catchError(this.handleError<string>('deleteComparison')),
+                tap(() => this.refreshComparisons())
+            );
     }
 
     runCompare(id: string): void {
